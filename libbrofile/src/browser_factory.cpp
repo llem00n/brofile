@@ -11,6 +11,7 @@ std::unique_ptr<bf::browser_base> bf::browser_factory::create(const std::filesys
       return std::make_unique<bf::chromium>(executable);
     case bf::browser_type::FIREFOX:
       //return std::make_unique<bf::firefox>();
+      return nullptr;
     case bf::browser_type::GOOGLE_CHROME:
       return std::make_unique<bf::chromium>(executable, "google-chrome");
     case bf::browser_type::UNSUPPORTED:

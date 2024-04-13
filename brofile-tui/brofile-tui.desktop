@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=0.0
+Type=Application
+Name=brofile-tui
+Comment=Brofile TUI
+Exec=brofile-tui %U
+NoDisplay=true
+Terminal=true

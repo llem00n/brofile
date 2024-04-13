@@ -51,6 +51,7 @@ bool bf::chromium::open() {
   if (pid == 0) {
     _open();
   } else {
+    waitpid(pid, nullptr, 0);
     return false;
   }
 
