@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 
-bf::chromium::chromium(const std::string &executable, const std::string &config_dir): browser_base(executable), config_dir(config_dir) {}
+bf::chromium::chromium(const std::string &executable, const std::string &config_dir): browser_base(executable), config_dir(config_dir), incognito(false), new_window(false) {}
 
 bool bf::chromium::profiles_available() const {
   return true;

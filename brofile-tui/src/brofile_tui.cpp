@@ -146,19 +146,13 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_buttons() {
 
   open_button = Button("[o] Open", [&] {
     auto &browser = browsers[selected_browser];
-    if (selected_profile > 1 && selected_profile <= browser.profiles.size()) {
+    if (selected_profile >= 1 && selected_profile <= browser.profiles.size()) {
       browser.browser->set_profile(browser.profiles[selected_profile - 1]);
     }
 
     browser.browser->set_url(url);
-
-    if (new_window) {
-      browser.browser->set_new_window(true);
-    }
-
-    if (incognito) {
-      browser.browser->set_incognito(true);
-    }
+    browser.browser->set_new_window(new_window);
+    browser.browser->set_incognito(incognito);
 
     browser.browser->open();
 
