@@ -20,7 +20,7 @@ add_executable(brofile-tui
         src/brofile_tui.cpp)
 
 target_include_directories(brofile-tui PRIVATE include)
-target_link_libraries(brofile-tui PRIVATE ftxui::screen ftxui::dom ftxui::component brofile)
+target_link_libraries(brofile-tui PRIVATE ftxui::screen ftxui::dom ftxui::component brofile app-context)
 
 # --- Install ---
 set(CMAKE_INSTALL_PREFIX /usr)

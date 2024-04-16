@@ -2,6 +2,7 @@
 #define BROFILE_BROFILE_TUI_HPP
 
 #include "brofile/browser_base.hpp"
+#include "app_context/app_context.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
 #include <memory>
@@ -19,19 +20,17 @@ namespace bftui {
    * @brief The brofile TUI.
    */
   class brofile_tui {
+    bf::ctx::_ctx::ctx &context;
     std::vector<browser_info> browsers;
     std::string url;
-    bool new_window;
-    bool incognito;
     std::shared_ptr<ftxui::ComponentBase> url_input;
     ftxui::ScreenInteractive screen;
     std::vector<std::string> left_menu_items;
     std::shared_ptr<ftxui::ComponentBase> left_menu;
-    int selected_browser;
     std::vector<std::string> right_menu_items;
     std::shared_ptr<ftxui::ComponentBase> right_menu;
-    int selected_profile;
     std::shared_ptr<ftxui::ComponentBase> open_button;
+
 
   public:
     brofile_tui(int argc, char **argv);

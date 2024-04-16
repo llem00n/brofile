@@ -8,7 +8,8 @@
 
 using namespace bftui;
 
-brofile_tui::brofile_tui(int argc, char **argv): new_window(false), incognito(false), selected_browser(0), selected_profile(0), screen(ftxui::ScreenInteractive::Fullscreen()) {
+brofile_tui::brofile_tui(int argc, char **argv): screen(ftxui::ScreenInteractive::Fullscreen()), context(bf::ctx::app_context::get_instance().get_context()) {
+  bf::ctx::app_context::get_instance().init();
   init_browsers();
 
   if (argc > 1) {
@@ -53,12 +54,12 @@ void brofile_tui::init_tui() {
     }
 
     if (!url_input->Focused() && (e == Event::Character('n') || e == Event::Character('N'))) {
-      new_window = !new_window;
+      context.new_window = !context.new_window;
       return true;
     }
 
     if (!url_input->Focused() && (e == Event::Character('i') || e == Event::Character('I'))) {
-      incognito = !incognito;
+      context.incognito = !context.incognito;
       return true;
     }
 
@@ -95,8 +96,8 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_toolbar() {
       Renderer([&] { return text(L"[u] URL: "); }),
       url_input,
     }),
-    Checkbox(L"[n] New window", &new_window),
-    Checkbox(L"[i] Incognito", &incognito),
+    Checkbox(L"[n] New window", &context.new_window),
+    Checkbox(L"[i] Incognito", &context.incognito),
     Renderer([&] { return separator(); }),
   });
 }
@@ -110,20 +111,26 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_browsers_menu() {
   });
 
   right_menu_items.clear();
-  if (selected_browser < browsers.size()) {
-    auto &browser = browsers[selected_browser];
-    right_menu_items.emplace_back("<None>");
-    std::transform(browser.profiles.begin(), browser.profiles.end(), std::back_inserter(right_menu_items), [] (auto &profile) {
-      return profile.name;
-    });
+  if (context.selected_browser >= browsers.size()) {
+    context.selected_browser = 0;
+  }
+
+  auto &browser = browsers[context.selected_browser];
+  right_menu_items.emplace_back("<None>");
+  std::transform(browser.profiles.begin(), browser.profiles.end(), std::back_inserter(right_menu_items), [] (auto &profile) {
+    return profile.name;
+  });
+
+  if (context.selected_profile >= right_menu_items.size()) {
+    context.selected_profile = 0;
   }
 
   auto left_menu_options = MenuOption();
   left_menu_options.on_change = [&] {
-    selected_profile = 0;
+    context.selected_profile = 0;
     right_menu_items.clear();
-    if (selected_browser < browsers.size()) {
-      auto &browser = browsers[selected_browser];
+    if (context.selected_browser < browsers.size()) {
+      auto &browser = browsers[context.selected_browser];
       right_menu_items.emplace_back("<None>");
       std::transform(browser.profiles.begin(), browser.profiles.end(), std::back_inserter(right_menu_items),
                      [](auto &profile) {
@@ -132,8 +139,8 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_browsers_menu() {
     }
   };
 
-  left_menu = Menu(&left_menu_items, &selected_browser, left_menu_options);
-  right_menu = Menu(&right_menu_items, &selected_profile);
+  left_menu = Menu(&left_menu_items, &context.selected_browser, left_menu_options);
+  right_menu = Menu(&right_menu_items, &context.selected_profile);
 
   return Container::Horizontal({
     left_menu | flex | border,
@@ -145,14 +152,16 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_buttons() {
   using namespace ftxui;
 
   open_button = Button("[o] Open", [&] {
-    auto &browser = browsers[selected_browser];
-    if (selected_profile >= 1 && selected_profile <= browser.profiles.size()) {
-      browser.browser->set_profile(browser.profiles[selected_profile - 1]);
+    auto &browser = browsers[context.selected_browser];
+    if (context.selected_profile >= 1 && context.selected_profile <= browser.profiles.size()) {
+      browser.browser->set_profile(browser.profiles[context.selected_profile - 1]);
     }
 
     browser.browser->set_url(url);
-    browser.browser->set_new_window(new_window);
-    browser.browser->set_incognito(incognito);
+    browser.browser->set_new_window(context.new_window);
+    browser.browser->set_incognito(context.incognito);
+
+    bf::ctx::app_context::get_instance().save();
 
     browser.browser->open();
 
