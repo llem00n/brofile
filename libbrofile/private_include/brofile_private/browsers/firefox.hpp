@@ -1,5 +1,5 @@
-#ifndef BROFILE_CHROMIUM_HPP
-#define BROFILE_CHROMIUM_HPP
+#ifndef BROFILE_FIREFOX_HPP
+#define BROFILE_FIREFOX_HPP
 
 #include <filesystem>
 #include <string>
@@ -8,9 +8,9 @@
 
 namespace bf {
   /**
-   * @brief The Chromium browser.
+   * @brief The Firefox browser.
    */
-  class chromium : public browser_base {
+  class firefox : public browser_base {
     std::string config_dir;
     std::string url;
     std::string profile;
@@ -18,9 +18,9 @@ namespace bf {
     bool incognito;
 
    public:
-    explicit chromium(const std::string& executable,
-                      const std::string& config_dir = "chromium");
-    ~chromium() override = default;
+    explicit firefox(const std::string& executable,
+                     const std::string& config_dir = ".mozilla/firefox");
+    ~firefox() override = default;
 
     /**
      * @brief Checks if profiles are available.
@@ -83,4 +83,4 @@ namespace bf {
   };
 }  // namespace bf
 
-#endif  // BROFILE_CHROMIUM_HPP
+#endif  // BROFILE_FIREFOX_HPP

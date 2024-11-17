@@ -21,9 +21,14 @@ set(SOURCE_FILES include/brofile/scanner.hpp src/scanner.cpp
         include/brofile/browser_base.hpp
         src/browser_factory.cpp
         private_include/brofile_private/browsers/chromium.hpp
+        private_include/brofile_private/browsers/firefox.hpp
+        private_include/brofile_private/tools/ini_tools.hpp
         src/browser_base.cpp
         src/chromium.cpp
-        include/brofile/browser_profile_info.hpp)
+        src/firefox.cpp
+        src/ini_tools.cpp
+        include/brofile/browser_profile_info.hpp
+)
 
 add_library(brofile SHARED ${SOURCE_FILES})
 

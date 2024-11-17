@@ -1,4 +1,5 @@
 #include "app_context/app_context.hpp"
+
 #include <fstream>
 
 using namespace bf::ctx;
@@ -44,9 +45,7 @@ void app_context::save() {
   cache_file.write(reinterpret_cast<char*>(&context), sizeof(context));
 }
 
-_ctx::ctx &app_context::get_context() {
-  return context;
-}
+_ctx::ctx& app_context::get_context() { return context; }
 
 std::filesystem::path app_context::get_config_dir() {
   auto xdg_config_home = std::getenv("XDG_CONFIG_HOME");

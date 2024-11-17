@@ -5,12 +5,7 @@ namespace bf {
   /**
    * @brief The type of browser.
    */
-  enum class browser_type {
-    CHROMIUM,
-    FIREFOX,
-    GOOGLE_CHROME,
-    UNSUPPORTED
-  };
-}
+  enum class browser_type { CHROMIUM, FIREFOX, GOOGLE_CHROME, UNSUPPORTED };
+}  // namespace bf
 
-#endif //BROFILE_BROWSER_TYPE_HPP
+#endif  // BROFILE_BROWSER_TYPE_HPP

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+
 #include "brofile/browser_profile_info.hpp"
 
 namespace bf {
@@ -12,8 +13,8 @@ namespace bf {
   class browser_base {
     std::string executable;
 
-  public:
-    explicit browser_base(const std::string &executable);
+   public:
+    explicit browser_base(const std::string& executable);
     virtual ~browser_base() = default;
 
     const std::string& get_executable() const;
@@ -71,6 +72,6 @@ namespace bf {
      */
     virtual std::string get_browser_name() const = 0;
   };
-}
+}  // namespace bf
 
-#endif //BROFILE_BROWSER_BASE_HPP
+#endif  // BROFILE_BROWSER_BASE_HPP

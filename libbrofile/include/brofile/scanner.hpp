@@ -1,15 +1,16 @@
 #ifndef BROFILE_SCANNER_HPP
 #define BROFILE_SCANNER_HPP
 
-#include <vector>
 #include <filesystem>
+#include <vector>
 
 namespace bf {
   /**
-   * @brief Scans $XDG_DATA_HOME and $XDG_DATA_DIRS directories for browser .desktop files.
+   * @brief Scans $XDG_DATA_HOME and $XDG_DATA_DIRS directories for browser
+   * .desktop files.
    */
   class scanner {
-  public:
+   public:
     scanner() = delete;
     scanner(const scanner&) = delete;
     scanner(scanner&&) = delete;
@@ -17,7 +18,8 @@ namespace bf {
     scanner& operator=(scanner&&) = delete;
 
     /**
-     * @brief Scans $XDG_DATA_HOME and $XDG_DATA_DIRS directories for browser .desktop files.
+     * @brief Scans $XDG_DATA_HOME and $XDG_DATA_DIRS directories for browser
+     * .desktop files.
      * @return A vector of paths to files.
      */
     static std::vector<std::filesystem::path> scan_default();
@@ -27,9 +29,10 @@ namespace bf {
      * @param dir The directory to scan_default.
      * @return A vector of paths to files.
      */
-    static std::vector<std::filesystem::path> scan(const std::filesystem::path& dir);
+    static std::vector<std::filesystem::path> scan(
+        const std::filesystem::path& dir);
 
-  private:
+   private:
     /**
      * @brief Checks if a .desktop file is a browser.
      * @param file The path to the .desktop file.
@@ -44,6 +47,6 @@ namespace bf {
      */
     static std::vector<std::string> split_env(const std::string& env);
   };
-}
+}  // namespace bf
 
-#endif //BROFILE_SCANNER_HPP
+#endif  // BROFILE_SCANNER_HPP

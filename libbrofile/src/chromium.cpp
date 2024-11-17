@@ -1,27 +1,30 @@
 #include "brofile_private/browsers/chromium.hpp"
-#include <filesystem>
-#include <unistd.h>
+
 #include <sys/wait.h>
+#include <unistd.h>
+
+#include <filesystem>
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
-bf::chromium::chromium(const std::string &executable, const std::string &config_dir): browser_base(executable), config_dir(config_dir), incognito(false), new_window(false) {}
+bf::chromium::chromium(const std::string &executable,
+                       const std::string &config_dir)
+    : browser_base(executable),
+      config_dir(config_dir),
+      incognito(false),
+      new_window(false) {}
 
-bool bf::chromium::profiles_available() const {
-  return true;
-}
+bool bf::chromium::profiles_available() const { return true; }
 
 std::vector<bf::browser_profile_info> bf::chromium::get_profiles() const {
   std::vector<bf::browser_profile_info> profiles;
-  std::filesystem::path path = std::filesystem::path(std::getenv("HOME")) / ".config" / config_dir;
+  std::filesystem::path path =
+      std::filesystem::path(std::getenv("HOME")) / ".config" / config_dir;
 
   auto local_state = nlohmann::json::parse(std::ifstream(path / "Local State"));
-  for (auto &[key, profile]: local_state["profile"]["info_cache"].items()) {
-    profiles.push_back({
-      .name = profile["name"],
-      .path = key
-    });
+  for (auto &[key, profile] : local_state["profile"]["info_cache"].items()) {
+    profiles.push_back({.name = profile["name"], .path = key});
   }
 
   return profiles;
@@ -60,7 +63,7 @@ bool bf::chromium::open() {
 
 void bf::chromium::_open() const {
   std::string executable = get_executable();
-  std::vector<std::string> args = { executable };
+  std::vector<std::string> args = {executable};
 
   if (new_window) {
     args.push_back("--new-window");
@@ -78,14 +81,14 @@ void bf::chromium::_open() const {
     args.push_back(url);
   }
 
-  char **argv = new char*[args.size() + 1];
+  char **argv = new char *[args.size() + 1];
   for (size_t i = 0; i < args.size(); i++) {
     argv[i] = new char[args[i].size() + 1];
     std::strcpy(argv[i], args[i].c_str());
   }
   argv[args.size()] = nullptr;
 
-  execv(executable.c_str(), argv);
+  execvp(executable.c_str(), argv);
 }
 
 std::string bf::chromium::get_browser_name() const {

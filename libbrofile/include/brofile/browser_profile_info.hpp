@@ -11,6 +11,6 @@ namespace bf {
     std::string name; /**< The name of the profile. */
     std::string path; /**< The path to the profile. */
   };
-}
+}  // namespace bf
 
-#endif //BROFILE_BROWSER_PROFILE_INFO_HPP
+#endif  // BROFILE_BROWSER_PROFILE_INFO_HPP

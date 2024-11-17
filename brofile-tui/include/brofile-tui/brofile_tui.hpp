@@ -1,11 +1,12 @@
 #ifndef BROFILE_BROFILE_TUI_HPP
 #define BROFILE_BROFILE_TUI_HPP
 
-#include "brofile/browser_base.hpp"
+#include <memory>
+
 #include "app_context/app_context.hpp"
+#include "brofile/browser_base.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
-#include <memory>
 
 namespace bftui {
   /**
@@ -31,11 +32,10 @@ namespace bftui {
     std::shared_ptr<ftxui::ComponentBase> right_menu;
     std::shared_ptr<ftxui::ComponentBase> open_button;
 
-
-  public:
+   public:
     brofile_tui(int argc, char **argv);
 
-  private:
+   private:
     /**
      * @brief Initializes the browsers.
      */
@@ -70,6 +70,6 @@ namespace bftui {
      */
     std::shared_ptr<ftxui::ComponentBase> init_buttons();
   };
-}
+}  // namespace bftui
 
-#endif //BROFILE_BROFILE_TUI_HPP
+#endif  // BROFILE_BROFILE_TUI_HPP
