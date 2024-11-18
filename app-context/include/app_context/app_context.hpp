@@ -5,19 +5,17 @@
 #include <memory>
 
 namespace bf {
-  namespace ctx {
-    namespace _ctx {
-      struct ctx {
-        bool new_window;
-        bool incognito;
-        int selected_browser;
-        int selected_profile;
-      };
-    }  // namespace _ctx
+  namespace ctx { // namespace
 
-    class app_context {
+    struct context {
+      bool new_window;
+      bool incognito;
+      int selected_browser;
+      int selected_profile;
+    };
+
+    class app_context : public context {
       static std::unique_ptr<app_context> instance;
-      _ctx::ctx context;
 
      public:
       app_context(const app_context&) = delete;
@@ -29,11 +27,11 @@ namespace bf {
       void init();
       void save();
 
-      _ctx::ctx& get_context();
-
      private:
       app_context();
       std::filesystem::path get_config_dir();
+
+      void remove_cache_v1();
     };
   }  // namespace ctx
 }  // namespace bf

@@ -21,7 +21,7 @@ namespace bftui {
    * @brief The brofile TUI.
    */
   class brofile_tui {
-    bf::ctx::_ctx::ctx &context;
+    bf::ctx::app_context &context;
     std::vector<browser_info> browsers;
     std::string url;
     std::shared_ptr<ftxui::ComponentBase> url_input;

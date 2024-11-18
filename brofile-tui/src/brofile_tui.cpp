@@ -11,7 +11,7 @@ using namespace bftui;
 
 brofile_tui::brofile_tui(int argc, char **argv)
     : screen(ftxui::ScreenInteractive::Fullscreen()),
-      context(bf::ctx::app_context::get_instance().get_context()) {
+      context(bf::ctx::app_context::get_instance()) {
   bf::ctx::app_context::get_instance().init();
   init_browsers();
 

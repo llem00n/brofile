@@ -1,16 +1,17 @@
 #include "app_context/app_context.hpp"
 
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 using namespace bf::ctx;
 
 std::unique_ptr<app_context> app_context::instance = nullptr;
 
 app_context::app_context() {
-  context.new_window = false;
-  context.incognito = false;
-  context.selected_browser = 0;
-  context.selected_profile = 0;
+  new_window = false;
+  incognito = false;
+  selected_browser = 0;
+  selected_profile = 0;
 }
 
 app_context& app_context::get_instance() {
@@ -22,30 +23,42 @@ app_context& app_context::get_instance() {
 }
 
 void app_context::init() {
+  remove_cache_v1();
+
   auto config_dir = get_config_dir();
   if (!std::filesystem::exists(config_dir / "brofile")) {
     std::filesystem::create_directories(config_dir / "brofile");
   }
 
-  if (!std::filesystem::exists(config_dir / "brofile/cache")) {
+  if (!std::filesystem::exists(config_dir / "brofile/settings.json")) {
     return;
   }
 
-  std::ifstream cache_file(config_dir / "brofile/cache", std::ios::binary);
-  cache_file.read(reinterpret_cast<char*>(&context), sizeof(context));
+  auto json = nlohmann::json::parse(std::ifstream(config_dir / "brofile/settings.json"));
+
+  new_window = json.value("new_window", false);
+  incognito = json.value("incognito", false);
+  selected_browser = json.value("selected_browser", 0);
+  selected_profile = json.value("selected_profile", 0);
 }
 
 void app_context::save() {
+  remove_cache_v1();
+
   auto config_dir = get_config_dir();
   if (!std::filesystem::exists(config_dir / "brofile")) {
     std::filesystem::create_directory(config_dir / "brofile");
   }
 
-  std::ofstream cache_file(config_dir / "brofile/cache", std::ios::binary);
-  cache_file.write(reinterpret_cast<char*>(&context), sizeof(context));
+  std::ofstream file(config_dir / "brofile/settings.json");
+  nlohmann::json json = nlohmann::json::object({
+    { "new_window", new_window },
+    { "incognito", incognito },
+    { "selected_browser", selected_browser },
+    { "selected_profile", selected_profile },
+  });
+  file << json;
 }
-
-_ctx::ctx& app_context::get_context() { return context; }
 
 std::filesystem::path app_context::get_config_dir() {
   auto xdg_config_home = std::getenv("XDG_CONFIG_HOME");
@@ -59,4 +72,11 @@ std::filesystem::path app_context::get_config_dir() {
   }
 
   return std::filesystem::path("~/.config");
+}
+
+void app_context::remove_cache_v1() {
+  auto config_dir = get_config_dir();
+  if (std::filesystem::exists(config_dir / "brofile/cache")) {
+    std::filesystem::remove(config_dir / "brofile/cache");
+  }
 }
