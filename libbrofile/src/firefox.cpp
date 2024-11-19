@@ -7,6 +7,7 @@
 
 #include "brofile_private/browsers/firefox.hpp"
 
+#include <spdlog/spdlog.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -19,15 +20,21 @@
 
 bf::firefox::firefox(const std::string &executable, const std::string &config_dir)
     : browser_base(executable, browser_type::FIREFOX), config_dir(config_dir), incognito(false), new_window(false) {
+  auto logger = spdlog::get("browser");
+  if (logger) logger->info("[FIREFOX] is being prepared: executable - {}, config_dir - {}", executable, config_dir);
+
   scan_profiles();
 }
 
 bool bf::firefox::profiles_available() const { return true; }
 
 void bf::firefox::scan_profiles() {
+  auto logger = spdlog::get("browser");
   profiles.clear();
 
   std::filesystem::path config_path = std::filesystem::path(std::getenv("HOME")) / config_dir;
+
+  if (logger) logger->debug("[FIREFOX] scanning for profiles at {}", config_path.c_str());
 
   auto profiles_config = tools::parse_simple_ini(std::ifstream(config_path / "profiles.ini"));
 
@@ -36,17 +43,23 @@ void bf::firefox::scan_profiles() {
       auto profile_ptr = std::make_unique<firefox_profile_info>();
       profile_ptr->name = profile["Name"];
       profile_ptr->path = profile["Path"];
-      scan_firefox_containers(*profile_ptr);
+      if (logger) logger->info("[FIREFOX] profile found: {} - {}", profile_ptr->name, profile_ptr->path);
+      try {
+        scan_firefox_containers(*profile_ptr);
+      } catch (std::runtime_error &ex) {
+        if (logger) logger->error("[FIREFOX] failed to scan for containers: {}", ex.what());
+      }
       profiles.push_back(std::move(profile_ptr));
     }
   }
 }
 
-const std::vector<std::unique_ptr<bf::browser_profile_info>> &bf::firefox::get_profiles() const {
-  return profiles;
-  }
+const std::vector<std::unique_ptr<bf::browser_profile_info>> &bf::firefox::get_profiles() const { return profiles; }
 
 void bf::firefox::scan_firefox_containers(firefox_profile_info &profile) {
+  auto logger = spdlog::get("browser");
+  if (logger) logger->debug("[FIREFOX] scanning {} for containers", profile.name);
+
   profile.containers.clear();
 
   std::filesystem::path profile_config_path = std::filesystem::path(std::getenv("HOME")) / config_dir / profile.path;
@@ -80,6 +93,13 @@ void bf::firefox::scan_firefox_containers(firefox_profile_info &profile) {
   }
 
   profile.containers_available = containers_enabled && addon_installed;
+  if (logger)
+    logger->info("[FIREFOX] containers_enabled: {}, addon_installed: {}", containers_enabled, addon_installed);
+  if (logger)
+    logger->info("[FIREFOX] containers are {}enabled in the {} pofile", profile.containers_available ? "" : "not ",
+                  profile.name);
+
+  // search for containers
   if (!profile.containers_available) return;
 
   if (!std::filesystem::exists(profile_config_path / "containers.json")) {
@@ -108,14 +128,17 @@ void bf::firefox::scan_firefox_containers(firefox_profile_info &profile) {
           {"user-context-shopping", "Shopping"},
       };
       container->name = locale_mapping.find(container_json["l10nId"]) != locale_mapping.end()
-                                 ? locale_mapping[container_json["l10nId"]]
-                                 : container_json.value("l10nId", "");
+                            ? locale_mapping[container_json["l10nId"]]
+                            : container_json.value("l10nId", "");
     } else {
       container->name = container_json.value("name", "<bad name>");
     }
 
     container->icon = container_json["icon"];
     container->color = container_json["color"];
+    if (logger)
+      logger->info("[FIREFOX] - ({}) container found: {} - {} - {}", profile.name, container->name, container->color,
+                   container->icon);
     profile.containers.push_back(std::move(container));
   }
 }

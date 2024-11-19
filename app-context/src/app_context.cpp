@@ -20,6 +20,7 @@ app_context::app_context() {
   selected_browser = 0;
   selected_profile = 0;
   selected_firefox_container = 0;
+  log_level = "info";
 }
 
 app_context& app_context::get_instance() {
@@ -49,6 +50,7 @@ void app_context::init() {
   selected_browser = json.value("selected_browser", 0);
   selected_profile = json.value("selected_profile", 0);
   selected_firefox_container = json.value("selected_firefox_container", 0);
+  log_level = json.value("log_level", "info");
 }
 
 void app_context::save() {
@@ -66,6 +68,7 @@ void app_context::save() {
     { "selected_browser", selected_browser },
     { "selected_profile", selected_profile },
     { "selected_firefox_container", selected_firefox_container },
+    { "log_level", log_level },
   });
   file << json;
 }

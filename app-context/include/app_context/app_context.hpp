@@ -20,6 +20,7 @@ namespace bf {
       int selected_browser;
       int selected_profile;
       int selected_firefox_container;
+      std::string log_level;
     };
 
     class app_context : public context {

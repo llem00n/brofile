@@ -7,6 +7,9 @@
 
 #include "brofile-tui/brofile_tui.hpp"
 
+#include <spdlog/spdlog.h>
+
+#include <csignal>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/screen/string.hpp>
@@ -14,13 +17,15 @@
 
 #include "brofile/browser_factory.hpp"
 #include "brofile/firefox.hpp"
+#include "brofile/logging.hpp"
 #include "brofile/scanner.hpp"
 
 using namespace bftui;
 
 brofile_tui::brofile_tui(int argc, char **argv)
     : screen(ftxui::ScreenInteractive::Fullscreen()), context(bf::ctx::app_context::get_instance()) {
-  bf::ctx::app_context::get_instance().init();
+  context.init();
+  setup_loggers();
   init_browsers();
 
   if (argc > 1) {
@@ -31,6 +36,7 @@ brofile_tui::brofile_tui(int argc, char **argv)
 }
 
 void brofile_tui::init_browsers() {
+  if (logger) logger->debug("initializing browsers...");
   browsers.clear();
   auto browser_paths = bf::scanner::scan_default();
   for (auto &path : browser_paths) {
@@ -39,6 +45,7 @@ void brofile_tui::init_browsers() {
       browsers.push_back(std::move(browser));
     }
   }
+  if (logger) logger->debug("done initializing browsers");
 }
 
 void brofile_tui::init_tui() {
@@ -250,4 +257,11 @@ void brofile_tui::on_profile_change(bool reset) {
       show_firefox_containers = true;
     }
   }
+}
+
+void brofile_tui::setup_loggers() {
+  logger = bf::setup_logger("brofile-tui", context.log_level);
+  bf::setup_logger("scanner", context.log_level);
+  bf::setup_logger("browser-factory", context.log_level);
+  bf::setup_logger("browser", context.log_level);
 }

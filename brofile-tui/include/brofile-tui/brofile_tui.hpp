@@ -8,6 +8,8 @@
 #ifndef BROFILE_BROFILE_TUI_HPP
 #define BROFILE_BROFILE_TUI_HPP
 
+#include <spdlog/logger.h>
+
 #include <memory>
 
 #include "app_context/app_context.hpp"
@@ -37,6 +39,8 @@ namespace bftui {
 
     bool show_profiles;
     bool show_firefox_containers;
+
+    std::shared_ptr<spdlog::logger> logger;
 
    public:
     brofile_tui(int argc, char **argv);
@@ -87,6 +91,11 @@ namespace bftui {
      * @param reset - reset selections. default is true.
      */
     void on_profile_change(bool reset = true);
+
+    /**
+     * @brief Sets up required spdlog loggers
+     */
+    void setup_loggers();
   };
 }  // namespace bftui
 
