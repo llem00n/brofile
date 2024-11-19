@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.12)
 project(brofile)
 
 set(CLIENT_TYPE "ALL" CACHE STRING "Desired TUI/GUI client type (now it's TUI only)")
