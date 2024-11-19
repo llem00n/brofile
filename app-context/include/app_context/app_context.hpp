@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Oleksandr Porubaimikh
+ * SPDX-License-Identifier: MIT
+ *
+ * See the LICENSE file in the root of this project for details.
+ */
+
 #ifndef BROFILE_APP_CONTEXT_HPP
 #define BROFILE_APP_CONTEXT_HPP
 

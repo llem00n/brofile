@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Oleksandr Porubaimikh
+ * SPDX-License-Identifier: MIT
+ *
+ * See the LICENSE file in the root of this project for details.
+ */
+
 #include "brofile/browser_base.hpp"
 
 bf::browser_base::browser_base(const std::string &executable, const browser_type &type)

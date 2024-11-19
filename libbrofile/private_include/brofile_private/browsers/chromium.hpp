@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Oleksandr Porubaimikh
+ * SPDX-License-Identifier: MIT
+ *
+ * See the LICENSE file in the root of this project for details.
+ */
+
 #ifndef BROFILE_CHROMIUM_PRIVATE_HPP
 #define BROFILE_CHROMIUM_PRIVATE_HPP
 
