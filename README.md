@@ -19,6 +19,7 @@ Steps:
 git clone https://github.com/llem00n/brofile
 cd brofile
 mkdir build && cd build
+cmake ..
 cmake --build .
 sudo cmake --install . --prefix /usr
 ```
