@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Oleksandr Porubaimikh
+ * SPDX-License-Identifier: MIT
+ *
+ * See the LICENSE file in the root of this project for details.
+ */
+
 #include "app_context/app_context.hpp"
 
 #include <fstream>
@@ -12,6 +19,7 @@ app_context::app_context() {
   incognito = false;
   selected_browser = 0;
   selected_profile = 0;
+  selected_firefox_container = 0;
 }
 
 app_context& app_context::get_instance() {
@@ -40,6 +48,7 @@ void app_context::init() {
   incognito = json.value("incognito", false);
   selected_browser = json.value("selected_browser", 0);
   selected_profile = json.value("selected_profile", 0);
+  selected_firefox_container = json.value("selected_firefox_container", 0);
 }
 
 void app_context::save() {
@@ -56,6 +65,7 @@ void app_context::save() {
     { "incognito", incognito },
     { "selected_browser", selected_browser },
     { "selected_profile", selected_profile },
+    { "selected_firefox_container", selected_firefox_container },
   });
   file << json;
 }

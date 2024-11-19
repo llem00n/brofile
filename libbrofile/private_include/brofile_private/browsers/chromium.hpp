@@ -1,5 +1,12 @@
-#ifndef BROFILE_CHROMIUM_HPP
-#define BROFILE_CHROMIUM_HPP
+/*
+ * Copyright (c) 2024 Oleksandr Porubaimikh
+ * SPDX-License-Identifier: MIT
+ *
+ * See the LICENSE file in the root of this project for details.
+ */
+
+#ifndef BROFILE_CHROMIUM_PRIVATE_HPP
+#define BROFILE_CHROMIUM_PRIVATE_HPP
 
 #include <filesystem>
 #include <string>
@@ -16,10 +23,10 @@ namespace bf {
     std::string profile;
     bool new_window;
     bool incognito;
+    std::vector<std::unique_ptr<bf::browser_profile_info>> profiles;
 
    public:
-    explicit chromium(const std::string& executable,
-                      const std::string& config_dir = "chromium");
+    explicit chromium(const std::string &executable, const std::string &config_dir = "chromium");
     ~chromium() override = default;
 
     /**
@@ -33,21 +40,28 @@ namespace bf {
      * @return A vector of profiles.
      * @throws std::runtime_error if profiles are not available.
      */
-    std::vector<browser_profile_info> get_profiles() const override;
+    const std::vector<std::unique_ptr<browser_profile_info>> &get_profiles() const override;
 
     /**
      * @brief Sets the profile.
      * @param profile The profile to set.
      * @throws std::runtime_error if profiles are not available.
      */
-    void set_profile(const browser_profile_info& profile) override;
+    void set_profile(const browser_profile_info &profile) override;
+
+    /**
+     * @brief Sets the Firefox container.
+     * @param profile The Firefox container to set.
+     * @throws std::runtime_error if Firefox containers are not available.
+     */
+    void set_firefox_container(const firefox_container_info &container) override;
 
     /**
      * @brief Sets the URL.
      * @param url The URL to set.
      * @return true if the URL was set, false otherwise.
      */
-    bool set_url(const std::string& url) override;
+    bool set_url(const std::string &url) override;
 
     /**
      * @brief Sets if a new window should be opened.
@@ -80,7 +94,12 @@ namespace bf {
      * @brief Starts the browser process using execv.
      */
     void _open() const;
+
+    /**
+     * @brief Scans for profiles
+     */
+    void scan_profiles();
   };
 }  // namespace bf
 
-#endif  // BROFILE_CHROMIUM_HPP
+#endif  // BROFILE_CHROMIUM_PRIVATE_HPP

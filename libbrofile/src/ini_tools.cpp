@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Oleksandr Porubaimikh
+ * SPDX-License-Identifier: MIT
+ *
+ * See the LICENSE file in the root of this project for details.
+ */
+
 #include <brofile_private/tools/ini_tools.hpp>
 
 std::map<std::string, std::map<std::string, std::string>>
