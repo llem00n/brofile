@@ -10,27 +10,26 @@
 
 namespace bftui {
   /**
-   * @brief The browser information.
-   */
-  struct browser_info {
-    std::unique_ptr<bf::browser_base> browser;
-    std::vector<bf::browser_profile_info> profiles;
-  };
-
-  /**
    * @brief The brofile TUI.
    */
   class brofile_tui {
-    bf::ctx::app_context &context;
-    std::vector<browser_info> browsers;
     std::string url;
-    std::shared_ptr<ftxui::ComponentBase> url_input;
+    bf::ctx::app_context &context;
+    std::vector<std::unique_ptr<bf::browser_base>> browsers;
     ftxui::ScreenInteractive screen;
-    std::vector<std::string> left_menu_items;
-    std::shared_ptr<ftxui::ComponentBase> left_menu;
-    std::vector<std::string> right_menu_items;
-    std::shared_ptr<ftxui::ComponentBase> right_menu;
+
+    std::vector<std::string> browsers_select_items;
+    std::vector<std::string> profiles_select_items;
+    std::vector<std::string> firefox_containers_select_items;
+
     std::shared_ptr<ftxui::ComponentBase> open_button;
+    std::shared_ptr<ftxui::ComponentBase> url_input;
+    std::shared_ptr<ftxui::ComponentBase> browsers_dropdown;
+    std::shared_ptr<ftxui::ComponentBase> profiles_dropdown;
+    std::shared_ptr<ftxui::ComponentBase> firefox_containers_dropdown;
+
+    bool show_profiles;
+    bool show_firefox_containers;
 
    public:
     brofile_tui(int argc, char **argv);
@@ -69,6 +68,16 @@ namespace bftui {
      * @return The buttons.
      */
     std::shared_ptr<ftxui::ComponentBase> init_buttons();
+
+    /**
+     * @brief Handles browser selection change.
+     */
+    void on_browser_change();
+
+    /**
+     * @brief Handles profile selection change.
+     */
+    void on_profile_change();
   };
 }  // namespace bftui
 

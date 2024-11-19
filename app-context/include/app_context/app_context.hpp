@@ -12,6 +12,7 @@ namespace bf {
       bool incognito;
       int selected_browser;
       int selected_profile;
+      int selected_firefox_container;
     };
 
     class app_context : public context {

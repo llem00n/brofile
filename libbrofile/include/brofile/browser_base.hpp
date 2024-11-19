@@ -1,10 +1,13 @@
 #ifndef BROFILE_BROWSER_BASE_HPP
 #define BROFILE_BROWSER_BASE_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "brofile/browser_profile_info.hpp"
+#include "brofile/browser_type.hpp"
+#include "brofile/firefox_container_info.hpp"
 
 namespace bf {
   /**
@@ -12,12 +15,17 @@ namespace bf {
    */
   class browser_base {
     std::string executable;
+    browser_type type;
 
    public:
-    explicit browser_base(const std::string& executable);
+    explicit browser_base(const std::string &executable, const browser_type &type);
+    browser_base(const browser_base &) = delete;
+    browser_base(browser_base &&) = delete;
     virtual ~browser_base() = default;
 
-    const std::string& get_executable() const;
+    const std::string &get_executable() const;
+
+    const browser_type &get_type() const;
 
     /**
      * @brief Checks if profiles are available.
@@ -30,21 +38,28 @@ namespace bf {
      * @return A vector of profiles.
      * @throws std::runtime_error if profiles are not available.
      */
-    virtual std::vector<browser_profile_info> get_profiles() const = 0;
+    const virtual std::vector<std::unique_ptr<browser_profile_info>> &get_profiles() const = 0;
 
     /**
      * @brief Sets the profile.
      * @param profile The profile to set.
      * @throws std::runtime_error if profiles are not available.
      */
-    virtual void set_profile(const browser_profile_info& profile) = 0;
+    virtual void set_profile(const browser_profile_info &profile) = 0;
+
+    /**
+     * @brief Sets the Firefox container.
+     * @param profile The Firefox container to set.
+     * @throws std::runtime_error if Firefox containers are not available.
+     */
+    virtual void set_firefox_container(const firefox_container_info &container) = 0;
 
     /**
      * @brief Sets the URL.
      * @param url The URL to set.
      * @return true if the URL was set, false otherwise.
      */
-    virtual bool set_url(const std::string& url) = 0;
+    virtual bool set_url(const std::string &url) = 0;
 
     /**
      * @brief Sets if a new window should be opened.
