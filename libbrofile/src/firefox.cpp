@@ -11,7 +11,6 @@
 #include <unistd.h>
 
 #include <filesystem>
-#include <format>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -169,7 +168,7 @@ void bf::firefox::_open() const {
 
   std::string full_url;
   if (!container.name.empty()) {
-    full_url = std::format("ext+container:name={}&url=", container.name);
+    full_url = "ext+container:name=" + container.name + "&url=", container.name;
   }
 
   full_url += !url.empty() ? url : "about:blank";
