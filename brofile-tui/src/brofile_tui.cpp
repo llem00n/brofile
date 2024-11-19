@@ -138,19 +138,19 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_browsers_menu() {
   std::transform(browsers.begin(), browsers.end(), std::back_inserter(browsers_select_items),
                  [](auto &browser) { return browser->get_browser_name(); });
 
-  if (context.selected_browser >= browsers.size()) {
+  if (context.selected_browser > browsers.size()) {
     context.selected_browser = 0;
   }
 
   browsers_dropdown = Dropdown({.radiobox = {.entries = &browsers_select_items,
                                              .selected = &context.selected_browser,
                                              .on_change = [&] { on_browser_change(); }}});
-  on_browser_change();
+  on_browser_change(false);
 
   profiles_dropdown = Dropdown({.radiobox = {.entries = &profiles_select_items,
                                              .selected = &context.selected_profile,
                                              .on_change = [&] { on_profile_change(); }}});
-  on_profile_change();
+  on_profile_change(false);
 
   firefox_containers_dropdown = Dropdown({.radiobox = {.entries = &firefox_containers_select_items,
                                                        .selected = &context.selected_firefox_container,
@@ -208,12 +208,14 @@ std::shared_ptr<ftxui::ComponentBase> brofile_tui::init_buttons() {
          align_right;
 }
 
-void brofile_tui::on_browser_change() {
+void brofile_tui::on_browser_change(bool reset) {
   show_profiles = false;
   show_firefox_containers = false;
 
-  context.selected_profile = 0;
-  context.selected_firefox_container = 0;
+  if (reset) {
+    context.selected_profile = 0;
+    context.selected_firefox_container = 0;
+  }
 
   if (!context.selected_browser) return;
   auto &browser = browsers[context.selected_browser - 1];
@@ -226,9 +228,12 @@ void brofile_tui::on_browser_change() {
   }
 }
 
-void brofile_tui::on_profile_change() {
+void brofile_tui::on_profile_change(bool reset) {
   show_firefox_containers = false;
-  context.selected_firefox_container = 0;
+
+  if (reset) {
+    context.selected_firefox_container = 0;
+  }
 
   if (!context.selected_browser || !context.selected_profile) return;
   auto &browser = browsers[context.selected_browser - 1];

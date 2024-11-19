@@ -78,13 +78,15 @@ namespace bftui {
 
     /**
      * @brief Handles browser selection change.
+     * @param reset - reset selections. default is true.
      */
-    void on_browser_change();
+    void on_browser_change(bool reset = true);
 
     /**
      * @brief Handles profile selection change.
+     * @param reset - reset selections. default is true.
      */
-    void on_profile_change();
+    void on_profile_change(bool reset = true);
   };
 }  // namespace bftui
 
