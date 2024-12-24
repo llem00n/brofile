@@ -63,6 +63,7 @@ bool bf::chromium::open() {
     _open();
     return true;
   } else {
+    waitpid(pid, nullptr, 0);
     return false;
   }
 }
@@ -72,6 +73,7 @@ void bf::chromium::_open() const {
   std::vector<std::string> args = {executable};
 
   if (new_window) {
+    
     args.push_back("--new-window");
   }
 
