@@ -168,6 +168,7 @@ bool bf::firefox::open() {
     _open();
     return true;
   } else {
+    waitpid(pid, nullptr, 0);
     return false;
   }
 }
